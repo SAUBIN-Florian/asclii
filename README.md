@@ -45,4 +45,4 @@ You have a built-in documentation with:
 - [ ] Make it cross plateform
 - [ ] Add support for gif and video
 - [ ] Get rid of opencv and implement my own images handler librarie
-- ~~[ ] Rewrite it in Rust~~
+- [ ] ~~Rewrite it in Rust~~
