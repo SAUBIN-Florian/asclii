@@ -15,6 +15,7 @@ void doc() {
     Options:
         --help          Show this help message
         --img <file>    Specify an image file
+        --jpg           Write a jpg version of an image
         --verbose       Enable verbose logging
     )" << std::endl;
     exit(0);
@@ -69,12 +70,32 @@ int main(int argc, char* argv[]) {
         cv::Mat img = cv::imread(args.at("--img"), cv::IMREAD_GRAYSCALE);
         Logger::trace_log("image: [%d * %d] found at %s", img.cols, img.rows, args.at("--img").c_str());
         
-        double aspect_ratio = 0.55;
         int new_width = 400;
-        int new_height = (img.cols / img.rows) * new_width * aspect_ratio;
+        double aspect_ratio = static_cast<double>(img.rows) / img.cols;
+        int new_height = static_cast<int>(new_width * aspect_ratio * 0.55);
         cv::resize(img, img, cv::Size(new_width, new_height));
 
         img_to_ascii(img);
+    }
+
+    if (args.find("--jpg") != args.end()) {
+        std::string input_file = args.at("--jpg");
+        std::string output_file = "image.jpg";
+
+        if (!cv::haveImageReader(input_file)) {
+            Logger::error_log("Can not read the file at %s", input_file);
+            exit(EXIT_FAILURE);  
+        }
+
+        // Will write a jpeg version at this cli program's path
+        cv::Mat img = cv::imread(input_file, cv::IMREAD_UNCHANGED);
+
+        if (!cv::imwrite(output_file, img)) {
+            Logger::error_log("Can not write the file at %s", input_file);
+            exit(EXIT_FAILURE);
+        }
+
+        Logger::trace_log("Wrote a jpg version of image: %s", input_file.c_str());
     }
 
     Logger::trace_log("Exit Program");
