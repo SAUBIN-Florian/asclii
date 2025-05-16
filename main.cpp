@@ -15,7 +15,7 @@ void doc() {
     Options:
         --help          Show this help message
         --img <file>    Specify an image file
-        --jpg           Write a jpg version of an image
+        --jpg <file>    Write a jpg version of an image
         --verbose       Enable verbose logging
     )" << std::endl;
     exit(0);
@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
         cv::Mat img = cv::imread(input_file, cv::IMREAD_UNCHANGED);
 
         if (!cv::imwrite(output_file, img)) {
-            Logger::error_log("Can not write the file at %s", input_file);
+            Logger::error_log("Can not write the file at %s", input_file.c_str());
             exit(EXIT_FAILURE);
         }
 
